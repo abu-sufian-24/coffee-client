@@ -10,6 +10,7 @@ function Navbar() {
       <span className="font-bold text-lg text-white">Espresso Emporium</span>
       <Link className="text-lg text-white font-bold hover:text-red-500" to={"/"}>Home</Link>
       <Link className="text-lg text-white font-bold hover:text-red-500" to={"/add-coffee"}>Add Coffee</Link>
+      <Link className="text-lg text-white font-bold hover:text-red-500 ml-24" to={"/login"}>Login</Link>
     </div>
 
   )

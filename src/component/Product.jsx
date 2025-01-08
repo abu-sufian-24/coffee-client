@@ -1,57 +1,57 @@
 
 
-import img1 from "../assets/images/1.png"
-import img2 from "../assets/images/2.png"
-import img3 from "../assets/images/3.png"
-import img4 from "../assets/images/4.png"
+import { useEffect, useState } from "react";
 import ProductItem from "./ProductItem";
+import Swal from "sweetalert2";
 
 
 function Product() {
-  const products = [
-    {
-      id: 1,
-      name: "Americano Coffee",
-      chef: "Mr. Matin Paul",
-      price: "890 Taka",
-      image: img1,
-    },
-    {
-      id: 2,
-      name: "Black Coffee",
-      chef: "Mr. Nibra Sweden",
-      price: "890 Taka",
-      image: img2,
-    },
-    {
-      id: 3,
-      name: "Espresso Coffee",
-      chef: "Mrs. Morisha",
-      price: "890 Taka",
-      image: img3,
-    },
-    {
-      id: 4,
-      name: "Cappuccino Coffee",
-      chef: "Mr. Moruti",
-      price: "890 Taka",
-      image: img4,
-    },
-    {
-      id: 5,
-      name: "Macchiato",
-      chef: "Mr. Moruti",
-      price: "890 Taka",
-      image: img1,
-    },
-    {
-      id: 6,
-      name: "Decaf Coffee",
-      chef: "Mr. Moruti",
-      price: "890 Taka",
-      image: img2,
-    },
-  ];
+  const [coffees, setCoffees] = useState([])
+
+
+  useEffect(() => {
+    fetch("http://localhost:4000/coffees")
+      .then((res) => res.json())
+      .then((data) => {
+        setCoffees(data)
+      })
+  }, [])
+
+  const handleClick = (id) => {
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`http://localhost:4000/coffee/${id}`, {
+          method: "DELETE",
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.deletedCount > 0) {
+              const newData = coffees.filter((coffee) => coffee._id !== id)
+              setCoffees(newData)
+              Swal.fire({
+                title: "Deleted!",
+                text: "Your file has been deleted.",
+                icon: "success"
+              });
+            }
+
+
+          })
+
+      }
+    });
+
+  }
+
 
   return (
     <>
@@ -71,8 +71,8 @@ function Product() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map((product) => (
-              <ProductItem key={product.id} product={product} />
+            {coffees.map((product) => (
+              <ProductItem key={product._id} product={product} handleClick={handleClick} />
             ))}
           </div>
         </div>
